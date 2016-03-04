@@ -29,17 +29,24 @@
 package org.hisp.dhis.android.dashboard.ui.fragments.dashboard;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -75,6 +82,8 @@ public class DashboardViewPagerFragment extends BaseFragment
     static final String TAG = DashboardViewPagerFragment.class.getSimpleName();
     static final String IS_LOADING = "state:isLoading";
     static final int LOADER_ID = 1233432;
+    private CoordinatorLayout coordinatorLayout;
+    Snackbar snackbar;
 
     @Bind(R.id.dashboard_tabs)
     TabLayout mTabs;
@@ -92,7 +101,10 @@ public class DashboardViewPagerFragment extends BaseFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_dashboards, parent, false);
+        //return inflater.inflate(R.layout.fragment_dashboards, parent, false);
+        View view = inflater.inflate(R.layout.fragment_dashboards,parent, false);
+        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
+        return view;
     }
 
     @Override
@@ -218,7 +230,18 @@ public class DashboardViewPagerFragment extends BaseFragment
             mTabs.setupWithViewPager(mViewPager);
         }
     }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public boolean onMenuItemClicked(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_dashboard_item: {
@@ -230,7 +253,21 @@ public class DashboardViewPagerFragment extends BaseFragment
                 return true;
             }
             case R.id.refresh: {
-                syncDashboards();
+                if(isNetworkAvailable()) {
+                    syncDashboards();
+                }
+                else
+                {
+                    Log.d("internet","nahi hai");
+                    snackbar = Snackbar
+                            .make(coordinatorLayout, "No Internet Connection!", Snackbar.LENGTH_LONG);
+                    snackbar.setActionTextColor(Color.RED);
+                    View snackbarView = snackbar.getView();
+                    snackbarView.setBackgroundColor(Color.DKGRAY);
+                    TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.YELLOW);
+                    snackbar.show();
+                }
                 return true;
             }
             case R.id.add_dashboard: {
