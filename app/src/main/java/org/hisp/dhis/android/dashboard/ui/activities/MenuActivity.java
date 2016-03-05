@@ -48,7 +48,6 @@ import org.hisp.dhis.android.dashboard.R;
 import org.hisp.dhis.android.dashboard.api.models.UserAccount;
 import org.hisp.dhis.android.dashboard.api.persistence.loaders.DbLoader;
 import org.hisp.dhis.android.dashboard.api.persistence.loaders.Query;
-import org.hisp.dhis.android.dashboard.ui.fragments.AboutFragment;
 import org.hisp.dhis.android.dashboard.ui.fragments.AccountFragment;
 import org.hisp.dhis.android.dashboard.ui.fragments.SettingsFragment;
 import org.hisp.dhis.android.dashboard.ui.fragments.dashboard.DashboardContainerFragment;
@@ -124,9 +123,6 @@ public class MenuActivity extends BaseActivity
             case R.id.menu_settings_item: {
                 attachFragmentDelayed(new SettingsFragment());
                 break;
-            }
-            case R.id.menu_about_item: {
-                attachFragment(new AboutFragment());
             }
             /* case R.id.menu_about_item: {
                 getDhisController().invalidateSession();

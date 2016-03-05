@@ -107,8 +107,4 @@
     <string name="email">Email</string>
     <string name="phone_number">Phone number</string>
     <!-- END Account -->
-
-    <!-- START About -->
-    <string name="check_for_update">Check for Updates</string>
-    <!-- END About -->
 </resources>
